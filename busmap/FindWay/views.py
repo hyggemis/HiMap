@@ -59,7 +59,7 @@ def dijkstra(adj, trace, dist, s, t):
 
 
 def read_data(adj):
-	data = (docx2txt.process("../static/data/Data.docx")).splitlines()
+	data = (docx2txt.process("static/data/Data.docx")).splitlines()
 
 	line = 0
 	while line < len(data):
