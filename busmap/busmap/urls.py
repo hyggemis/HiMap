@@ -19,4 +19,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('index/', include("FindWay.urls")),
+    path('post_way/', include("FindWay.urls"))
 ]

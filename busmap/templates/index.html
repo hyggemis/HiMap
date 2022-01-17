@@ -44,21 +44,30 @@
             <div class="tab-content" >
                 <div class="tab-pane active" >
                     <div class="trangchu">
-                        <form action="" method="">
+                        <form action="/post_way/way/" method="POST">
+                            {% csrf_token %}
                             <div class="start">
-                                <label for="start">Trạm bắt đầu: </label>
-                                <input type="text" name="start" id="start">
+                                <label for="start">Trạm bắt đầu:</label>
+                                <select name="start" id="start">
+                                    {% for i in bus %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="end">
                                 <label for="end">Trạm kết thúc:</label>
-                                <input type="text" name="end" id="end">
+                                <select name="end" id="start">
+                                    {% for i in bus %}
+                                    <option>{{i}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <input type="submit" value="Tìm" name = "search">
                         </form>
                     </div>
                     <div class="way">
-                        <p>Gợi ý tuyến xe bus:</p>
-                        <p>Hướng dẫn tuyến đường đi:</p>
+                        <p>Gợi ý tuyến xe bus:{% for i in bus_number %} {{i}}, {%endfor%}</p>
+                        <p>Hướng dẫn tuyến đường đi:{{ data }}</p>
                     </div>
                 </div>
                 

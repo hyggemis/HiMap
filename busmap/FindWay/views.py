@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .forms import  WayForm
 
 # Create your views here.
 
@@ -11,11 +12,23 @@ INF = 1e9
 BIAS = 1000
 
 
+
+station = []
+bus_number = []
+
+def index_view(request):
+	
+	context = {}
+	read_data(context)
+
+	return render(request, "../templates/index.html", {"bus": station})
+
 class Node:
 	def __init__(self, node, weight, bus):
 		self.node = node
 		self.weight = weight
 		self.bus = bus
+
 
 
 class Path(Node):
@@ -64,6 +77,7 @@ def read_data(adj):
 	line = 0
 	while line < len(data):
 		bus = data[line].strip()
+		bus_number.append(bus)
 		line += 2
 
 		if bus == 'EOF':
@@ -75,6 +89,7 @@ def read_data(adj):
 		while True:
 			u_node = v_node
 			v_node = data[line].strip()
+			station.append(v_node)
 
 			if v_node == '':
 				line += 2
@@ -115,24 +130,27 @@ def output(trace, s, t):
 		prev_bus, path.node, prev_node + '.'
 	) + '\n' + output
 
-	print(output)
+	return output
 
+def get_data(request):
+	# if this is a POST request we need to process the form data
+	if request.method == 'POST':
+		# create a form instance and populate it with data from the request:
+		form = WayForm(request.POST)
+		if form.is_valid():
+			start = form.cleaned_data["start"]
+			end = form.cleaned_data["end"]
+			adj = {}
+			trace = {}
+			dist = {} 
+			s = Node(start, 0, '')
+			t = Node(end, 0, '')
 
-def main():
-	adj = {}
-	trace = {}
-	dist = {}
-	s = Node('TRẠM XĂNG DẦU', 0, '')
-	t = Node('THẢO NGUYÊN', 0, '')
+			read_data(adj)
 
-	read_data(adj)
+			dijkstra(adj, trace, dist, s, t)
 
-	dijkstra(adj, trace, dist, s, t)
+			data = output(trace, s, t)
 
-	output(trace, s, t)
+			return render(request, '../templates/index.html', {"bus": station,"data":data})
 
-
-main()
-
-def index_view(request):
-    return render(request, "../templates/index.html")
